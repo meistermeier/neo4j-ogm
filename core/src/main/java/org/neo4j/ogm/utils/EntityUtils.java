@@ -12,6 +12,7 @@
  */
 package org.neo4j.ogm.utils;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -46,4 +47,15 @@ public class EntityUtils {
         }
         return staticLabels;
     }
+
+    public static Long getEntityId(MetaData metaData, Object entity) {
+        return (Long) metaData.classInfo(entity).identityField().readProperty(entity);
+    }
+
+    public static void setEntityId(MetaData metaData, Object entity, Long identity) {
+		ClassInfo classInfo = metaData.classInfo(entity);
+		Field identityField = classInfo.getField(classInfo.identityField());
+		FieldInfo.write(identityField, entity, identity);
+    }
+
 }
